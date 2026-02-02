@@ -37,5 +37,8 @@ def decode_token(
         return json.loads(response.read().decode("utf-8"))
 
 
-def is_backend_trusted(backend_id: str, trusted_backends: List[str]) -> bool:
-    return backend_id in trusted_backends
+def get_trusted_backends(base_url: str) -> List[str]:
+    url = f"{_normalize(base_url)}/api/v1/info/trusted-backends"
+    with urllib.request.urlopen(url) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+        return payload.get("backendIds", [])
